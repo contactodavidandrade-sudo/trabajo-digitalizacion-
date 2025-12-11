@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Computing: Contenedores, IaaS, PaaS y SaaS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 20px;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .title-slide {
+            text-align: center;
+            color: white;
+        }
+
+        .title-slide h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            animation: slideDown 1s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .title-slide p {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            opacity: 0.9;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 1200px;
+            width: 100%;
+            margin: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .content-card h2 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 4px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .content-card h3 {
+            color: #764ba2;
+            font-size: 1.8rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .content-card p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .content-card ul {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .content-card li {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .image-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .comparison-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .comparison-item:hover {
+            transform: scale(1.05);
+        }
+
+        .comparison-item h3 {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .comparison-item p {
+            color: rgba(255,255,255,0.95);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .comparison-item strong {
+            color: #ffd700;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .example-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .example-box:hover {
+            background: #e9ecef;
+            border-left-width: 8px;
+        }
+
+        .example-box h4 {
+            color: #667eea;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        .example-box ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .example-box li {
+            padding: 8px 0;
+            color: #555;
+            font-size: 1rem;
+        }
+
+        .example-box li:before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .highlight-box h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .highlight-box p {
+            color: white;
+            font-size: 1.15rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 30px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: left;
+            font-size: 1.2rem;
+        }
+
+        td {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 1.05rem;
+            color: #555;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            z-index: 1001;
+        }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .content-card {
+                padding: 30px 20px;
+            }
+            
+            .content-card h2 {
+                font-size: 2rem;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <div class="container">
+        <!-- Slide 1: Portada -->
+        <div class="slide" id="slide1">
+            <div class="title-slide">
+                <div class="icon">☁️</div>
+                <h1>Cloud Computing</h1>
+                <p>Contenedores, IaaS, PaaS y SaaS</p>
+                <p style="font-size: 1.2rem; margin-top: 40px;">Una guía visual completa</p>
+                <p style="font-size: 1.5rem; margin-top: 30px; font-weight: bold;">DAVID ANDRADE</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Contenedores en la Nube -->
+        <div class="slide" id="slide2">
+            <div class="content-card">
+                <h2>🐳 ¿Qué es un Contenedor en la Nube?</h2>
+                
+                <div class="image-container">
+                    <img src="https://cdn.abacus.ai/images/64b2e621-81bb-47c2-b4fa-b56ec20257cd.jpg" alt="Contenedores en la nube">
+                </div>
+                
+                <p>Un contenedor en la nube es básicamente un paquete que tiene todo lo que necesita una aplicación para funcionar: el código, las librerías y todas sus dependencias.</p>
+                
+                <h3>🎯 Características Principales</h3>
+                <ul>
+                    <li><strong>Portabilidad:</strong> Funcionan igual en cualquier lugar, ya sea en desarrollo o en producción</li>
+                    <li><strong>Ligereza:</strong> Son muy ligeros porque comparten recursos del sistema, solo ocupan unos megabytes</li>
+                    <li><strong>Velocidad:</strong> Arrancan en segundos, mucho más rápido que las máquinas virtuales tradicionales</li>
+                    <li><strong>Aislamiento:</strong> Cada uno funciona por su cuenta sin molestar a los demás</li>
+                    <li><strong>Escalabilidad:</strong> Es muy fácil crear copias y distribuirlas por varios servidores</li>
+                </ul>
+                
+
+                
+                <h3>🔧 Tecnologías Populares</h3>
+                <div class="examples-grid">
+                    <div class="example-box">
+                        <h4>Docker</h4>
+                        <ul>
+                            <li>Plataforma líder</li>
+                            <li>Fácil de usar</li>
+                            <li>Gran comunidad</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <h4>Kubernetes</h4>
+                        <ul>
+                            <li>Orquestación</li>
+                            <li>Escalado automático</li>
+                            <li>Gestión de clústeres</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <h4>Podman</h4>
+                        <ul>
+                            <li>Sin demonio</li>
+                            <li>Más seguro</li>
+                            <li>Compatible con Docker</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: IaaS -->
+        <div class="slide" id="slide3">
+            <div class="content-card">
+                <h2>🖥️ IaaS - Infrastructure as a Service</h2>
+                
+                <div class="image-container">
+                    <img src="https://cdn.abacus.ai/images/171a924f-ebd9-485f-a094-6f4bc84fe165.jpg" alt="IaaS Infrastructure">
+                </div>
+                
+                <p>IaaS (Infraestructura como Servicio) te da recursos de computación virtualizados por internet: servidores, almacenamiento, redes y sistemas operativos.</p>
+                
+                <h3>🎯 ¿Qué Controlas?</h3>
+                
+                
+                <h3>✨ Ventajas</h3>
+                <ul>
+                    <li><strong>Máximo control:</strong> Puedes configurar todo como quieras</li>
+                    <li><strong>Escalabilidad:</strong> Aumentas o reduces recursos cuando lo necesites</li>
+                    <li><strong>Pago por uso:</strong> Pagas solo lo que usas</li>
+                    <li><strong>Sin inversión inicial:</strong> No tienes que comprar hardware físico</li>
+                    <li><strong>Alta disponibilidad:</strong> Hay servidores de respaldo en varios sitios</li>
+                </ul>
+                
+
+                
+                <h3>📦 Ejemplos Reales</h3>
+                <div class="examples-grid">
+                    <div class="example-box">
+                        <h4>Amazon Web Services (AWS)</h4>
+                        <ul>
+                            <li>EC2 (servidores virtuales)</li>
+                            <li>S3 (almacenamiento)</li>
+                            <li>VPC (redes privadas)</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <h4>Microsoft Azure</h4>
+                        <ul>
+                            <li>Azure Virtual Machines</li>
+                            <li>Azure Storage</li>
+                            <li>Azure Networking</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <h4>Google Cloud Platform</h4>
+                        <ul>
+                            <li>Compute Engine</li>
+                            <li>Cloud Storage</li>
+                            <li>Cloud VPN</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>🎯 Casos de Uso</h3>
+                <ul>
+                    <li>Hosting de sitios web y aplicaciones</li>
+                    <li>Entornos de desarrollo y pruebas</li>
+                    <li>Análisis de Big Data</li>
+                    <li>Backup y recuperación ante desastres</li>
+                    <li>Computación de alto rendimiento (HPC)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: PaaS -->
+        <div class="slide" id="slide4">
+            <div class="content-card">
+                <h2>⚙️ PaaS - Platform as a Service</h2>
+                
+                <div class="image-container">
+                    <img src="https://cdn.abacus.ai/images/220b2b45-0451-4970-9a21-26fd2b8a7d2d.jpg" alt="PaaS Platform">
+                </div>
+                
+                <p>PaaS (Plataforma como Servicio) te da una plataforma completa para desarrollar y ejecutar aplicaciones sin tener que preocuparte por toda la infraestructura de abajo.</p>
+                
+                <h3>🎯 ¿Qué Controlas?</h3>
+                
+                
+                <h3>✨ Ventajas</h3>
+                <ul>
+                    <li><strong>Desarrollo acelerado:</strong> Todo está listo para que empieces a programar ya</li>
+                    <li><strong>Menos gestión:</strong> No tienes que preocuparte por servidores ni actualizaciones</li>
+                    <li><strong>Escalado automático:</strong> La plataforma ajusta los recursos sola según lo que necesites</li>
+                    <li><strong>Colaboración:</strong> Los equipos pueden trabajar juntos desde donde sea</li>
+                    <li><strong>Herramientas integradas:</strong> Ya trae bases de datos, APIs y frameworks incluidos</li>
+                </ul>
+                
+
+                
+                <h3>📦 Ejemplos Reales</h3>
+                <div class="examples-grid">
+                    <div class="example-box">
+                        <h4>Google App Engine</h4>
+                        <ul>
+                            <li>Desarrollo web rápido</li>
+                            <li>Escalado automático</li>
+                            <li>Múltiples lenguajes</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <h4>Heroku</h4>
+                        <ul>
+                            <li>Despliegue simple</li>
+                            <li>Add-ons integrados</li>
+                            <li>Ideal para startups</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <h4>AWS Elastic Beanstalk</h4>
+                        <ul>
+                            <li>Gestión automática</li>
+                            <li>Monitoreo incluido</li>
+                            <li>Integración con AWS</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <h4>Microsoft Azure App Service</h4>
+                        <ul>
+                            <li>Apps web y móviles</li>
+                            <li>CI/CD integrado</li>
+                            <li>Soporte .NET y más</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>🎯 Casos de Uso</h3>
+                <ul>
+                    <li>Desarrollo de aplicaciones web y móviles</li>
+                    <li>Desarrollo y gestión de APIs</li>
+                    <li>Prácticas DevOps y CI/CD</li>
+                    <li>Aplicaciones de Internet of Things (IoT)</li>
+                    <li>Microservicios y arquitecturas modernas</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 5: SaaS -->
+        <div class="slide" id="slide5">
+            <div class="content-card">
+                <h2>📱 SaaS - Software as a Service</h2>
+                
+                <div class="image-container">
+                    <img src="https://cdn.abacus.ai/images/f0cfd627-f924-4776-b8a6-c3752d8d97ac.jpg" alt="SaaS Software">
+                </div>
+                
+                <p>SaaS (Software como Servicio) te da aplicaciones completas listas para usar por internet. Solo necesitas un navegador o una app en el móvil.</p>
+                
+                <h3>🎯 ¿Qué Controlas?</h3>
+                
+                
+                <h3>✨ Ventajas</h3>
+                <ul>
+                    <li><strong>Uso inmediato:</strong> No instalas nada, solo te registras y listo</li>
+                    <li><strong>Acceso universal:</strong> Lo usas desde cualquier dispositivo con internet</li>
+                    <li><strong>Actualizaciones automáticas:</strong> Siempre tienes la versión más nueva</li>
+                    <li><strong>Cero mantenimiento:</strong> El proveedor se ocupa de todo</li>
+                    <li><strong>Modelo de suscripción:</strong> Pagas mensual o anualmente, sin sorpresas</li>
+                    <li><strong>Colaboración fácil:</strong> Puedes compartir y trabajar en equipo sin complicaciones</li>
+                </ul>
+                
+
+                
+                <h3>📦 Ejemplos Reales</h3>
+                <div class="examples-grid">
+                    <div class="example-box">
+                        <h4>Gmail / Outlook</h4>
+                        <ul>
+                            <li>Correo electrónico</li>
+                            <li>Calendario</li>
+                            <li>Contactos</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <h4>Microsoft 365</h4>
+                        <ul>
+                            <li>Word, Excel, PowerPoint</li>
+                            <li>OneDrive</li>
+                            <li>Teams</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <h4>Google Workspace</h4>
+                        <ul>
+                            <li>Docs, Sheets, Slides</li>
+                            <li>Google Drive</li>
+                            <li>Google Meet</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <h4>Salesforce</h4>
+                        <ul>
+                            <li>CRM empresarial</li>
+                            <li>Gestión de ventas</li>
+                            <li>Análisis de clientes</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <h4>Dropbox</h4>
+                        <ul>
+                            <li>Almacenamiento en nube</li>
+                            <li>Sincronización</li>
+                            <li>Compartir archivos</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <h4>Slack / Zoom</h4>
+                        <ul>
+                            <li>Comunicación</li>
+                            <li>Videoconferencias</li>
+                            <li>Colaboración</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>🎯 Casos de Uso</h3>
+                <ul>
+                    <li>Correo electrónico y comunicación empresarial</li>
+                    <li>Gestión de relaciones con clientes (CRM)</li>
+                    <li>Herramientas de productividad y oficina</li>
+                    <li>Almacenamiento y compartición de archivos</li>
+                    <li>Gestión de proyectos y colaboración</li>
+                    <li>Contabilidad y recursos humanos</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 6: Comparación -->
+        <div class="slide" id="slide6">
+            <div class="content-card">
+                <h2>⚖️ Diferencias entre IaaS, PaaS y SaaS</h2>
+                
+                <div class="comparison-grid">
+                    <div class="comparison-item">
+                        <h3>🖥️ IaaS</h3>
+                        <p><strong>Control:</strong> Total</p>
+                        <p><strong>Gestión:</strong> Tú te encargas del sistema operativo, apps y datos</p>
+                        <p><strong>Flexibilidad:</strong> Puedes personalizar todo</p>
+                        <p><strong>Complejidad:</strong> Alta - necesitas saber de tecnología</p>
+                        <p><strong>Ideal para:</strong> Equipos técnicos con necesidades concretas</p>
+                    </div>
+                    
+                    <div class="comparison-item">
+                        <h3>⚙️ PaaS</h3>
+                        <p><strong>Control:</strong> Medio</p>
+                        <p><strong>Gestión:</strong> Tú solo gestionas las apps y los datos</p>
+                        <p><strong>Flexibilidad:</strong> Puedes personalizar algunas cosas</p>
+                        <p><strong>Complejidad:</strong> Media - te enfocas en desarrollar</p>
+                        <p><strong>Ideal para:</strong> Desarrolladores que quieren crear cosas rápido</p>
+                    </div>
+                    
+                    <div class="comparison-item">
+                        <h3>📱 SaaS</h3>
+                        <p><strong>Control:</strong> Mínimo</p>
+                        <p><strong>Gestión:</strong> Solo la usas, nada más</p>
+                        <p><strong>Flexibilidad:</strong> Solo configuraciones básicas</p>
+                        <p><strong>Complejidad:</strong> Baja - está listo para usar</p>
+                        <p><strong>Ideal para:</strong> Usuarios normales y empresas sin equipo técnico</p>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 50px; text-align: center; color: #667eea;">📊 Tabla Comparativa Detallada</h3>
+                
+                
+                <div class="highlight-box" style="margin-top: 40px;">
+                    <h3>🎯 ¿Cuál Elegir?</h3>
+                    <p><strong>IaaS:</strong> Si necesitas control total y tienes un equipo técnico.</p>
+                    <p><strong>PaaS:</strong> Si quieres desarrollar apps rápido sin preocuparte por la infraestructura.</p>
+                    <p><strong>SaaS:</strong> Si solo quieres usar una aplicación sin complicarte.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Resumen Visual -->
+        <div class="slide" id="slide7">
+            <div class="content-card">
+                <h2>📚 Resumen Visual: La Pirámide del Cloud</h2>
+                
+                <div style="text-align: center; margin: 40px 0;">
+                    <svg width="800" height="500" viewBox="0 0 800 500" style="max-width: 100%; height: auto;">
+                        <!-- SaaS (Top) -->
+                        <polygon points="400,50 250,180 550,180" fill="#4CAF50" opacity="0.9"/>
+                        <text x="400" y="130" text-anchor="middle" fill="white" font-size="24" font-weight="bold">SaaS</text>
+                        <text x="400" y="160" text-anchor="middle" fill="white" font-size="14">Aplicaciones listas</text>
+                        
+                        <!-- PaaS (Middle) -->
+                        <polygon points="250,180 150,310 650,310 550,180" fill="#2196F3" opacity="0.9"/>
+                        <text x="400" y="240" text-anchor="middle" fill="white" font-size="24" font-weight="bold">PaaS</text>
+                        <text x="400" y="270" text-anchor="middle" fill="white" font-size="14">Plataforma de desarrollo</text>
+                        
+                        <!-- IaaS (Bottom) -->
+                        <polygon points="150,310 50,440 750,440 650,310" fill="#9C27B0" opacity="0.9"/>
+                        <text x="400" y="370" text-anchor="middle" fill="white" font-size="24" font-weight="bold">IaaS</text>
+                        <text x="400" y="400" text-anchor="middle" fill="white" font-size="14">Infraestructura virtual</text>
+                        
+                        <!-- Labels -->
+                        <text x="50" y="480" fill="#333" font-size="16" font-weight="bold">Más Control →</text>
+                        <text x="650" y="480" fill="#333" font-size="16" font-weight="bold">← Más Facilidad</text>
+                    </svg>
+                </div>
+                
+                <h3 style="text-align: center; color: #667eea; margin-top: 40px;">🔑 Puntos Clave</h3>
+                
+                <div class="examples-grid">
+                    <div class="example-box">
+                        <h4>🐳 Contenedores</h4>
+                        <ul>
+                            <li>Empaquetan aplicaciones</li>
+                            <li>Portables y ligeros</li>
+                            <li>Se usan en todos los modelos</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="example-box">
+                        <h4>🖥️ IaaS</h4>
+                        <ul>
+                            <li>Máximo control</li>
+                            <li>Infraestructura virtual</li>
+                            <li>Pago por uso</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="example-box">
+                        <h4>⚙️ PaaS</h4>
+                        <ul>
+                            <li>Para desarrolladores</li>
+                            <li>Desarrollo rápido</li>
+                            <li>Gestión automática</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="example-box">
+                        <h4>📱 SaaS</h4>
+                        <ul>
+                            <li>Listo para usar</li>
+                            <li>Sin instalación</li>
+                            <li>Acceso desde cualquier lugar</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="highlight-box" style="margin-top: 40px;">
+                    <h3>💡 Conclusión</h3>
+                    <p>Los tres modelos (IaaS, PaaS, SaaS) no se excluyen entre sí. Muchas empresas usan varios a la vez según lo que necesiten. Los contenedores son una tecnología que puedes usar en cualquiera de estos modelos para que tus aplicaciones sean más portables y eficientes.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Final -->
+        <div class="slide" id="slide8">
+            <div class="title-slide">
+                <div class="icon">✨</div>
+                <h1>¡Gracias!</h1>
+                <p style="font-size: 1.2rem; margin-top: 20px; opacity: 0.9;">Contenedores • IaaS • PaaS • SaaS</p>
+                <p style="font-size: 1.5rem; margin-top: 30px; font-weight: bold;">DAVID ANDRADE</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">← Anterior</button>
+        <button class="nav-btn" onclick="nextSlide()">Siguiente →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 8;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = totalSlides;
+            if (n < 1) currentSlide = 1;
+            
+            slides.forEach((slide, index) => {
+                slide.style.display = 'none';
+            });
+            
+            slides[currentSlide - 1].style.display = 'flex';
+            
+            // Update progress bar
+            const progress = (currentSlide / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            // Smooth scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            if (currentSlide > totalSlides) currentSlide = totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function previousSlide() {
+            currentSlide--;
+            if (currentSlide < 1) currentSlide = 1;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight') nextSlide();
+            if (event.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Initialize
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
